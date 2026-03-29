@@ -1,25 +1,27 @@
+--// LOADING FULL LED VIỀN
+
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 
+local done = false
+
 -- GUI
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
-ScreenGui.Name = "AnimeLoadingOnly"
 
 local MainFrame = Instance.new("Frame", ScreenGui)
 MainFrame.Size = UDim2.new(0,0,0,0)
 MainFrame.Position = UDim2.new(0.5,0,0.5,0)
 MainFrame.AnchorPoint = Vector2.new(0.5,0.5)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15,15,20)
-MainFrame.BorderSizePixel = 0
 Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0,16)
 
--- 🌈 VIỀN RAINBOW
-local Stroke = Instance.new("UIStroke", MainFrame)
-Stroke.Thickness = 3
+--🔥 LED VIỀN 1 (CHÍNH)
+local Stroke1 = Instance.new("UIStroke", MainFrame)
+Stroke1.Thickness = 3
 
-local StrokeGradient = Instance.new("UIGradient", Stroke)
-StrokeGradient.Color = ColorSequence.new{
+local Gradient1 = Instance.new("UIGradient", Stroke1)
+Gradient1.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(255,0,0)),
     ColorSequenceKeypoint.new(0.2, Color3.fromRGB(255,255,0)),
     ColorSequenceKeypoint.new(0.4, Color3.fromRGB(0,255,0)),
@@ -28,14 +30,30 @@ StrokeGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(1, Color3.fromRGB(255,0,255))
 }
 
--- AVATAR
+--🔥 LED VIỀN 2 (GLOW NGOÀI)
+local Stroke2 = Instance.new("UIStroke", MainFrame)
+Stroke2.Thickness = 8
+Stroke2.Transparency = 0.6
+
+local Gradient2 = Instance.new("UIGradient", Stroke2)
+Gradient2.Color = Gradient1.Color
+
+--🔥 LED VIỀN 3 (GLOW MẠNH)
+local Stroke3 = Instance.new("UIStroke", MainFrame)
+Stroke3.Thickness = 14
+Stroke3.Transparency = 0.85
+
+local Gradient3 = Instance.new("UIGradient", Stroke3)
+Gradient3.Color = Gradient1.Color
+
+-- Avatar
 local Avatar = Instance.new("ImageLabel", MainFrame)
 Avatar.Size = UDim2.new(0,80,0,80)
 Avatar.Position = UDim2.new(0.5,-40,0,10)
 Avatar.BackgroundTransparency = 1
 Avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..player.UserId.."&width=420&height=420&format=png"
 
--- TITLE
+-- Title
 local Title = Instance.new("TextLabel", MainFrame)
 Title.Size = UDim2.new(1,0,0,40)
 Title.Position = UDim2.new(0,0,0,95)
@@ -45,22 +63,19 @@ Title.TextColor3 = Color3.fromRGB(255,255,255)
 Title.TextScaled = true
 Title.Font = Enum.Font.GothamBold
 
--- LOADING BG
+-- BG
 local BG = Instance.new("Frame", MainFrame)
 BG.Size = UDim2.new(0.85,0,0,22)
 BG.Position = UDim2.new(0.075,0,0.65,0)
 BG.BackgroundColor3 = Color3.fromRGB(30,30,40)
-BG.BorderSizePixel = 0
 Instance.new("UICorner", BG)
 
--- 🔵 THANH BLUE SKY
+-- 🔵 BAR BLUE SKY
 local Bar = Instance.new("Frame", BG)
 Bar.Size = UDim2.new(0,0,1,0)
 Bar.BackgroundColor3 = Color3.fromRGB(0,170,255)
-Bar.BorderSizePixel = 0
 Instance.new("UICorner", Bar)
 
--- Glow xanh
 local Glow = Instance.new("UIStroke", Bar)
 Glow.Thickness = 4
 Glow.Color = Color3.fromRGB(0,200,255)
@@ -74,18 +89,24 @@ Percent.BackgroundTransparency = 1
 Percent.Text = "0%"
 Percent.TextColor3 = Color3.fromRGB(200,220,255)
 Percent.TextScaled = true
-Percent.Font = Enum.Font.Gotham
 
 -- SCALE IN
 TweenService:Create(MainFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back), {
-    Size = UDim2.new(0,380,0,200)
+    Size = UDim2.new(0,400,0,220)
 }):Play()
 
--- 🌈 VIỀN CHẠY
+--🌈 LED ANIMATION
 task.spawn(function()
     while true do
-        StrokeGradient.Rotation += 2
-        task.wait(0.02)
+        Gradient1.Rotation += 3
+        Gradient2.Rotation += 3
+        Gradient3.Rotation += 3
+
+        -- hiệu ứng nhấp nháy glow
+        Stroke2.Transparency = 0.5 + math.random()*0.2
+        Stroke3.Transparency = 0.8 + math.random()*0.15
+
+        task.wait(0.03)
     end
 end)
 
@@ -107,23 +128,18 @@ task.spawn(function()
     Percent.Text = "Done!"
     task.wait(0.5)
 
-    -- Notify
-    pcall(function()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Anime Tổng Hợp",
-            Text = "Load hoàn tất!",
-            Duration = 5
-        })
-    end)
-
-    -- SCALE OUT
     TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
         Size = UDim2.new(0,0,0,0)
     }):Play()
 
     task.wait(0.5)
     ScreenGui:Destroy()
+
+    done = true
 end)
+
+--⛔ CHẶN SCRIPT
+repeat task.wait() until done
 
 loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
 
