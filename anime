@@ -1,4 +1,4 @@
---// LOADING + BACKGROUND ANIME
+--// LOADING + BACKGROUND ANIME TRONG UI
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -9,28 +9,29 @@ local done = false
 -- GUI
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 
--- 🖼 BACKGROUND ANIME
-local Background = Instance.new("ImageLabel", ScreenGui)
-Background.Size = UDim2.new(1,0,1,0)
-Background.Position = UDim2.new(0,0,0,0)
-Background.Image = "rbxassetid://140345383109773" -- 🔥 ĐỔI ID ẢNH ANIME Ở ĐÂY
-Background.ScaleType = Enum.ScaleType.Crop
-Background.BackgroundTransparency = 0
-Background.ImageTransparency = 0.3
-
--- Blur overlay
-local Dark = Instance.new("Frame", Background)
-Dark.Size = UDim2.new(1,0,1,0)
-Dark.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Dark.BackgroundTransparency = 0.4
-
 -- MAIN UI
 local MainFrame = Instance.new("Frame", ScreenGui)
 MainFrame.Size = UDim2.new(0,0,0,0)
 MainFrame.Position = UDim2.new(0.5,0,0.5,0)
 MainFrame.AnchorPoint = Vector2.new(0.5,0.5)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15,15,20)
+MainFrame.BorderSizePixel = 0
 Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0,16)
+
+-- 🖼 BACKGROUND ANIME (TRONG UI)
+local BgImage = Instance.new("ImageLabel", MainFrame)
+BgImage.Size = UDim2.new(1,0,1,0)
+BgImage.Position = UDim2.new(0,0,0,0)
+BgImage.Image = "rbxassetid://140345383109773" -- 🔥 ĐỔI ẢNH ANIME Ở ĐÂY
+BgImage.ScaleType = Enum.ScaleType.Crop
+BgImage.BackgroundTransparency = 1
+BgImage.ZIndex = 0
+
+-- Lớp tối
+local Dark = Instance.new("Frame", BgImage)
+Dark.Size = UDim2.new(1,0,1,0)
+Dark.BackgroundColor3 = Color3.fromRGB(0,0,0)
+Dark.BackgroundTransparency = 0.4
 
 -- 🔵 LED VIỀN
 local Stroke1 = Instance.new("UIStroke", MainFrame)
@@ -52,6 +53,7 @@ local Avatar = Instance.new("ImageLabel", MainFrame)
 Avatar.Size = UDim2.new(0,80,0,80)
 Avatar.Position = UDim2.new(0.5,-40,0,10)
 Avatar.BackgroundTransparency = 1
+Avatar.ZIndex = 2
 Avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..player.UserId.."&width=420&height=420&format=png"
 
 -- TITLE
@@ -59,6 +61,7 @@ local Title = Instance.new("TextLabel", MainFrame)
 Title.Size = UDim2.new(1,0,0,40)
 Title.Position = UDim2.new(0,0,0,95)
 Title.BackgroundTransparency = 1
+Title.ZIndex = 2
 Title.Text = "Anime Tổng Hợp"
 Title.TextColor3 = Color3.fromRGB(255,255,255)
 Title.TextScaled = true
@@ -69,6 +72,7 @@ local BG = Instance.new("Frame", MainFrame)
 BG.Size = UDim2.new(0.85,0,0,22)
 BG.Position = UDim2.new(0.075,0,0.65,0)
 BG.BackgroundColor3 = Color3.fromRGB(30,30,40)
+BG.ZIndex = 2
 Instance.new("UICorner", BG)
 
 -- 🔵 BAR
@@ -87,6 +91,7 @@ local Percent = Instance.new("TextLabel", MainFrame)
 Percent.Size = UDim2.new(1,0,0,30)
 Percent.Position = UDim2.new(0,0,0.78,0)
 Percent.BackgroundTransparency = 1
+Percent.ZIndex = 2
 Percent.Text = "0%"
 Percent.TextColor3 = Color3.fromRGB(200,220,255)
 Percent.TextScaled = true
