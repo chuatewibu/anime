@@ -1,4 +1,4 @@
---// LOADING LED VIỀN XANH (KHÔNG RAINBOW)
+--// LOADING + BACKGROUND ANIME
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -9,6 +9,22 @@ local done = false
 -- GUI
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 
+-- 🖼 BACKGROUND ANIME
+local Background = Instance.new("ImageLabel", ScreenGui)
+Background.Size = UDim2.new(1,0,1,0)
+Background.Position = UDim2.new(0,0,0,0)
+Background.Image = "rbxassetid://140345383109773" -- 🔥 ĐỔI ID ẢNH ANIME Ở ĐÂY
+Background.ScaleType = Enum.ScaleType.Crop
+Background.BackgroundTransparency = 0
+Background.ImageTransparency = 0.3
+
+-- Blur overlay
+local Dark = Instance.new("Frame", Background)
+Dark.Size = UDim2.new(1,0,1,0)
+Dark.BackgroundColor3 = Color3.fromRGB(0,0,0)
+Dark.BackgroundTransparency = 0.4
+
+-- MAIN UI
 local MainFrame = Instance.new("Frame", ScreenGui)
 MainFrame.Size = UDim2.new(0,0,0,0)
 MainFrame.Position = UDim2.new(0.5,0,0.5,0)
@@ -16,7 +32,7 @@ MainFrame.AnchorPoint = Vector2.new(0.5,0.5)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15,15,20)
 Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0,16)
 
--- 🔵 LED VIỀN (3 LỚP GLOW)
+-- 🔵 LED VIỀN
 local Stroke1 = Instance.new("UIStroke", MainFrame)
 Stroke1.Thickness = 3
 Stroke1.Color = Color3.fromRGB(0,170,255)
@@ -31,14 +47,14 @@ Stroke3.Thickness = 14
 Stroke3.Color = Color3.fromRGB(0,200,255)
 Stroke3.Transparency = 0.85
 
--- Avatar
+-- AVATAR
 local Avatar = Instance.new("ImageLabel", MainFrame)
 Avatar.Size = UDim2.new(0,80,0,80)
 Avatar.Position = UDim2.new(0.5,-40,0,10)
 Avatar.BackgroundTransparency = 1
 Avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..player.UserId.."&width=420&height=420&format=png"
 
--- Title
+-- TITLE
 local Title = Instance.new("TextLabel", MainFrame)
 Title.Size = UDim2.new(1,0,0,40)
 Title.Position = UDim2.new(0,0,0,95)
@@ -48,14 +64,14 @@ Title.TextColor3 = Color3.fromRGB(255,255,255)
 Title.TextScaled = true
 Title.Font = Enum.Font.GothamBold
 
--- BG
+-- BG BAR
 local BG = Instance.new("Frame", MainFrame)
 BG.Size = UDim2.new(0.85,0,0,22)
 BG.Position = UDim2.new(0.075,0,0.65,0)
 BG.BackgroundColor3 = Color3.fromRGB(30,30,40)
 Instance.new("UICorner", BG)
 
--- 🔵 BAR BLUE SKY
+-- 🔵 BAR
 local Bar = Instance.new("Frame", BG)
 Bar.Size = UDim2.new(0,0,1,0)
 Bar.BackgroundColor3 = Color3.fromRGB(0,170,255)
@@ -80,22 +96,12 @@ TweenService:Create(MainFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back), {
     Size = UDim2.new(0,400,0,220)
 }):Play()
 
--- 🔵 LED EFFECT (NHẤP NHÁY + PULSE)
+-- LED EFFECT
 task.spawn(function()
     while true do
-        -- nhấp nháy glow
         Stroke2.Transparency = 0.5 + math.random()*0.2
         Stroke3.Transparency = 0.8 + math.random()*0.1
-
-        -- pulse nhẹ
-        TweenService:Create(MainFrame, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {
-            Size = UDim2.new(0,410,0,230)
-        }):Play()
-        task.wait(0.8)
-        TweenService:Create(MainFrame, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {
-            Size = UDim2.new(0,400,0,220)
-        }):Play()
-        task.wait(0.8)
+        task.wait(0.05)
     end
 end)
 
@@ -127,7 +133,6 @@ task.spawn(function()
     done = true
 end)
 
--- ⛔ CHẶN SCRIPT
 repeat task.wait() until done
 
 loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
