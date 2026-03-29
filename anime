@@ -1,3 +1,130 @@
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+
+-- GUI
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.Name = "AnimeLoadingOnly"
+
+local MainFrame = Instance.new("Frame", ScreenGui)
+MainFrame.Size = UDim2.new(0,0,0,0)
+MainFrame.Position = UDim2.new(0.5,0,0.5,0)
+MainFrame.AnchorPoint = Vector2.new(0.5,0.5)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15,15,20)
+MainFrame.BorderSizePixel = 0
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0,16)
+
+-- 🌈 VIỀN RAINBOW
+local Stroke = Instance.new("UIStroke", MainFrame)
+Stroke.Thickness = 3
+
+local StrokeGradient = Instance.new("UIGradient", Stroke)
+StrokeGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255,0,0)),
+    ColorSequenceKeypoint.new(0.2, Color3.fromRGB(255,255,0)),
+    ColorSequenceKeypoint.new(0.4, Color3.fromRGB(0,255,0)),
+    ColorSequenceKeypoint.new(0.6, Color3.fromRGB(0,255,255)),
+    ColorSequenceKeypoint.new(0.8, Color3.fromRGB(0,0,255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255,0,255))
+}
+
+-- AVATAR
+local Avatar = Instance.new("ImageLabel", MainFrame)
+Avatar.Size = UDim2.new(0,80,0,80)
+Avatar.Position = UDim2.new(0.5,-40,0,10)
+Avatar.BackgroundTransparency = 1
+Avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..player.UserId.."&width=420&height=420&format=png"
+
+-- TITLE
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1,0,0,40)
+Title.Position = UDim2.new(0,0,0,95)
+Title.BackgroundTransparency = 1
+Title.Text = "Anime Tổng Hợp"
+Title.TextColor3 = Color3.fromRGB(255,255,255)
+Title.TextScaled = true
+Title.Font = Enum.Font.GothamBold
+
+-- LOADING BG
+local BG = Instance.new("Frame", MainFrame)
+BG.Size = UDim2.new(0.85,0,0,22)
+BG.Position = UDim2.new(0.075,0,0.65,0)
+BG.BackgroundColor3 = Color3.fromRGB(30,30,40)
+BG.BorderSizePixel = 0
+Instance.new("UICorner", BG)
+
+-- 🔵 THANH BLUE SKY
+local Bar = Instance.new("Frame", BG)
+Bar.Size = UDim2.new(0,0,1,0)
+Bar.BackgroundColor3 = Color3.fromRGB(0,170,255)
+Bar.BorderSizePixel = 0
+Instance.new("UICorner", Bar)
+
+-- Glow xanh
+local Glow = Instance.new("UIStroke", Bar)
+Glow.Thickness = 4
+Glow.Color = Color3.fromRGB(0,200,255)
+Glow.Transparency = 0.3
+
+-- %
+local Percent = Instance.new("TextLabel", MainFrame)
+Percent.Size = UDim2.new(1,0,0,30)
+Percent.Position = UDim2.new(0,0,0.78,0)
+Percent.BackgroundTransparency = 1
+Percent.Text = "0%"
+Percent.TextColor3 = Color3.fromRGB(200,220,255)
+Percent.TextScaled = true
+Percent.Font = Enum.Font.Gotham
+
+-- SCALE IN
+TweenService:Create(MainFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back), {
+    Size = UDim2.new(0,380,0,200)
+}):Play()
+
+-- 🌈 VIỀN CHẠY
+task.spawn(function()
+    while true do
+        StrokeGradient.Rotation += 2
+        task.wait(0.02)
+    end
+end)
+
+-- LOADING
+task.spawn(function()
+    local p = 0
+    while p < 100 do
+        p += math.random(2,6)
+        if p > 100 then p = 100 end
+
+        TweenService:Create(Bar, TweenInfo.new(0.2), {
+            Size = UDim2.new(p/100,0,1,0)
+        }):Play()
+
+        Percent.Text = p.."%"
+        task.wait(0.1)
+    end
+
+    Percent.Text = "Done!"
+    task.wait(0.5)
+
+    -- Notify
+    pcall(function()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Anime Tổng Hợp",
+            Text = "Load hoàn tất!",
+            Duration = 5
+        })
+    end)
+
+    -- SCALE OUT
+    TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+        Size = UDim2.new(0,0,0,0)
+    }):Play()
+
+    task.wait(0.5)
+    ScreenGui:Destroy()
+end)
+
 loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
 
        local Window = MakeWindow({
