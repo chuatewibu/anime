@@ -1,4 +1,4 @@
---// LOADING + BACKGROUND ANIME TRONG UI
+--// LOADING + BG ANIME CHỈ TRONG UI
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -16,13 +16,13 @@ MainFrame.Position = UDim2.new(0.5,0,0.5,0)
 MainFrame.AnchorPoint = Vector2.new(0.5,0.5)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15,15,20)
 MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true --🔥 QUAN TRỌNG
 Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0,16)
 
--- 🖼 BACKGROUND ANIME (TRONG UI)
+-- 🖼 BACKGROUND ANIME (KHÔNG TRÀN RA NGOÀI)
 local BgImage = Instance.new("ImageLabel", MainFrame)
 BgImage.Size = UDim2.new(1,0,1,0)
-BgImage.Position = UDim2.new(0,0,0,0)
-BgImage.Image = "rbxassetid://140345383109773" -- 🔥 ĐỔI ẢNH ANIME Ở ĐÂY
+BgImage.Image = "rbxassetid://140345383109773" -- đổi ảnh
 BgImage.ScaleType = Enum.ScaleType.Crop
 BgImage.BackgroundTransparency = 1
 BgImage.ZIndex = 0
@@ -67,7 +67,7 @@ Title.TextColor3 = Color3.fromRGB(255,255,255)
 Title.TextScaled = true
 Title.Font = Enum.Font.GothamBold
 
--- BG BAR
+-- LOADING BAR
 local BG = Instance.new("Frame", MainFrame)
 BG.Size = UDim2.new(0.85,0,0,22)
 BG.Position = UDim2.new(0.075,0,0.65,0)
@@ -75,7 +75,6 @@ BG.BackgroundColor3 = Color3.fromRGB(30,30,40)
 BG.ZIndex = 2
 Instance.new("UICorner", BG)
 
--- 🔵 BAR
 local Bar = Instance.new("Frame", BG)
 Bar.Size = UDim2.new(0,0,1,0)
 Bar.BackgroundColor3 = Color3.fromRGB(0,170,255)
