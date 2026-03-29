@@ -1,0 +1,160 @@
+--// Services
+local TweenService = game:GetService("TweenService")
+
+--// GUI
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local Frame = Instance.new("Frame", ScreenGui)
+local Title = Instance.new("TextLabel", Frame)
+local BarBG = Instance.new("Frame", Frame)
+local Bar = Instance.new("Frame", BarBG)
+local Percent = Instance.new("TextLabel", Frame)
+
+--// Frame
+Frame.Size = UDim2.new(0, 250, 0, 120)
+Frame.Position = UDim2.new(0.5, -125, 0.5, -60)
+Frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Frame.BorderSizePixel = 0
+Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 12)
+
+-- Glow nhẹ
+local Stroke = Instance.new("UIStroke", Frame)
+Stroke.Color = Color3.fromRGB(0,170,255)
+Stroke.Transparency = 0.5
+Stroke.Thickness = 1.2
+
+--// Title
+Title.Text = "Tổng Hợp"
+Title.Size = UDim2.new(1,0,0,30)
+Title.BackgroundTransparency = 1
+Title.TextColor3 = Color3.fromRGB(255,255,255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+
+--// Bar nền
+BarBG.Size = UDim2.new(0.8,0,0,12)
+BarBG.Position = UDim2.new(0.1,0,0.5,0)
+BarBG.BackgroundColor3 = Color3.fromRGB(50,50,50)
+BarBG.BorderSizePixel = 0
+Instance.new("UICorner", BarBG).CornerRadius = UDim.new(0,10)
+
+--// Bar chạy
+Bar.Size = UDim2.new(0,0,1,0)
+Bar.BackgroundColor3 = Color3.fromRGB(0,170,255)
+Bar.BorderSizePixel = 0
+Instance.new("UICorner", Bar).CornerRadius = UDim.new(0,10)
+
+--// Percent
+Percent.Text = "0%"
+Percent.Size = UDim2.new(1,0,0,20)
+Percent.Position = UDim2.new(0,0,0.7,0)
+Percent.BackgroundTransparency = 1
+Percent.TextColor3 = Color3.fromRGB(200,200,200)
+Percent.Font = Enum.Font.Gotham
+Percent.TextSize = 14
+
+--// Loading chạy đều
+for i = 1, 100 do
+    TweenService:Create(Bar, TweenInfo.new(0.03, Enum.EasingStyle.Linear), {
+        Size = UDim2.new(i/100,0,1,0)
+    }):Play()
+
+    Percent.Text = i.."%"
+    task.wait(0.03)
+end
+
+--// Done
+Percent.Text = "Loading ✅"
+task.wait(0.4)
+
+-- Fade out
+TweenService:Create(Frame, TweenInfo.new(0.3), {
+    BackgroundTransparency = 1
+}):Play()
+
+for _,v in pairs(Frame:GetDescendants()) do
+    if v:IsA("TextLabel") then
+        TweenService:Create(v, TweenInfo.new(0.3), {
+            TextTransparency = 1
+        }):Play()
+    end
+end
+
+task.wait(0.4)
+ScreenGui:Destroy()
+
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
+
+       local Window = MakeWindow({
+         Hub = {
+         Title = "Anime Compilation",
+         Animation = "Anime Tổng Hợp"
+         },
+        Key = {
+        KeySystem = true,
+        Title = "Key System",
+        Description = "",
+        KeyLink = "",
+        Keys = {"1234"},
+        Notifi = {
+        Notifications = true,
+        CorrectKey = "Running the Script...",
+       Incorrectkey = "The key is incorrect",
+       CopyKeyLink = "Copied to Clipboard"
+      }
+    }
+  })
+
+       MinimizeButton({
+       Image = "http://www.roblox.com/asset/?id=140345383109773",
+       Size = {40, 40},
+       Color = Color3.fromRGB(20, 15, 10),
+       Corner = true,
+       Stroke = false,
+       StrokeColor = Color3.fromRGB(255, 0, 0)
+      })
+      
+------ Tab
+     local Tab0o = MakeTab({Name = "Info"})
+     local Tab1o = MakeTab({Name = "Farm"})
+     local Tab2o = MakeTab({Name = "Kaitun"})
+     local Tab3o = MakeTab({Name = "Auto Chest"})
+     local Tab4o = MakeTab({Name = "Hop"})
+     local Tab5o = MakeTab({Name = "Fix Lag"})
+     
+------- BUTTON
+
+    AddButton(Tab3o, {
+     Name = "Anime Chest",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet('https://pastefy.app/W8S3shO3/raw'))()
+  end
+  })
+  
+      AddButton(Tab5o, {
+     Name = "Anime Fix Lag",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet('https://pastefy.app/Ou45j5eG/raw'))()
+  end
+  })
+  
+        AddButton(Tab1o, {
+     Name = "Anime Fix Lag",
+    Callback = function()
+	  local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+loadstring(game:HttpGet('https://pastefy.app/Ou45j5eG/raw'))()
+  end
+  })
