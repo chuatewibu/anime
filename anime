@@ -1,4 +1,4 @@
---// LOADING FULL LED VIỀN
+--// LOADING LED VIỀN XANH (KHÔNG RAINBOW)
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -16,35 +16,20 @@ MainFrame.AnchorPoint = Vector2.new(0.5,0.5)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15,15,20)
 Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0,16)
 
---🔥 LED VIỀN 1 (CHÍNH)
+-- 🔵 LED VIỀN (3 LỚP GLOW)
 local Stroke1 = Instance.new("UIStroke", MainFrame)
 Stroke1.Thickness = 3
+Stroke1.Color = Color3.fromRGB(0,170,255)
 
-local Gradient1 = Instance.new("UIGradient", Stroke1)
-Gradient1.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255,0,0)),
-    ColorSequenceKeypoint.new(0.2, Color3.fromRGB(255,255,0)),
-    ColorSequenceKeypoint.new(0.4, Color3.fromRGB(0,255,0)),
-    ColorSequenceKeypoint.new(0.6, Color3.fromRGB(0,255,255)),
-    ColorSequenceKeypoint.new(0.8, Color3.fromRGB(0,0,255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255,0,255))
-}
-
---🔥 LED VIỀN 2 (GLOW NGOÀI)
 local Stroke2 = Instance.new("UIStroke", MainFrame)
 Stroke2.Thickness = 8
+Stroke2.Color = Color3.fromRGB(0,200,255)
 Stroke2.Transparency = 0.6
 
-local Gradient2 = Instance.new("UIGradient", Stroke2)
-Gradient2.Color = Gradient1.Color
-
---🔥 LED VIỀN 3 (GLOW MẠNH)
 local Stroke3 = Instance.new("UIStroke", MainFrame)
 Stroke3.Thickness = 14
+Stroke3.Color = Color3.fromRGB(0,200,255)
 Stroke3.Transparency = 0.85
-
-local Gradient3 = Instance.new("UIGradient", Stroke3)
-Gradient3.Color = Gradient1.Color
 
 -- Avatar
 local Avatar = Instance.new("ImageLabel", MainFrame)
@@ -95,18 +80,22 @@ TweenService:Create(MainFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back), {
     Size = UDim2.new(0,400,0,220)
 }):Play()
 
---🌈 LED ANIMATION
+-- 🔵 LED EFFECT (NHẤP NHÁY + PULSE)
 task.spawn(function()
     while true do
-        Gradient1.Rotation += 3
-        Gradient2.Rotation += 3
-        Gradient3.Rotation += 3
-
-        -- hiệu ứng nhấp nháy glow
+        -- nhấp nháy glow
         Stroke2.Transparency = 0.5 + math.random()*0.2
-        Stroke3.Transparency = 0.8 + math.random()*0.15
+        Stroke3.Transparency = 0.8 + math.random()*0.1
 
-        task.wait(0.03)
+        -- pulse nhẹ
+        TweenService:Create(MainFrame, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {
+            Size = UDim2.new(0,410,0,230)
+        }):Play()
+        task.wait(0.8)
+        TweenService:Create(MainFrame, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {
+            Size = UDim2.new(0,400,0,220)
+        }):Play()
+        task.wait(0.8)
     end
 end)
 
@@ -138,7 +127,7 @@ task.spawn(function()
     done = true
 end)
 
---⛔ CHẶN SCRIPT
+-- ⛔ CHẶN SCRIPT
 repeat task.wait() until done
 
 loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
